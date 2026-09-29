@@ -50,7 +50,8 @@ def _seed(db):
     next_year = today.year + 1
 
     db.add_all([ResultCode(code=c, description=d, category=cat, is_final=f)
-                for c, d, cat, f in RESULT_CODES])
+                for c, d, cat, f in RESULT_CODES
+                if not db.get(ResultCode, c)])
     a_in = Agent(name="Ceren Aksoy", team="inbound")
     a_out1 = Agent(name="Elif Yıldız", team="outbound")
     a_out2 = Agent(name="Burak Demir", team="outbound")
