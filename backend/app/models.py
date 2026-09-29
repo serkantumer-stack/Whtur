@@ -120,4 +120,4 @@ class OutboundTask(Base):
     notes = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    guest = relationship("Guest")
+    guest = relationship("Guest", overlaps="tasks")

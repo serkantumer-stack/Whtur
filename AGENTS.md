@@ -13,6 +13,7 @@
 ## Veri akışı
 - Boş DB açılışta otomatik demo verisiyle dolar (`seed_data.py`, tarihler `date.today()`'ye göre relatif — senaryoların vade durumları her ortamda korunur).
 - Açılışta ve `POST /api/engine/run`'da motor **pending** görevleri silip yeniden üretir (idempotent); **completed** görevler deneme sayacı için korunur.
+- Google Sheets içe aktarma: `backend/app/sheets_import.py` — herkese açık CSV linki üzerinden **tam senkron** (tabloları silip sheet'ten yeniden yazar, motoru çalıştırır). Kolon eşleme `COLUMN_ALIASES`, sonuç kodu normalize `CODE_FIXES` içinde — yeni başlık/kod varyantları oraya eklenir.
 - Veriyi sıfırlamak: `docker compose -f docker-compose.base44.yml down -v` (pgdata volume silinir).
 
 ## Doğrulama

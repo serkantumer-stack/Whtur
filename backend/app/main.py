@@ -12,8 +12,9 @@ from datetime import date
 from io import StringIO
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import func, inspect as sa_inspect
 from sqlalchemy.orm import Session
@@ -220,6 +221,23 @@ def export_csv(segment: str = Query("all"), due_only: bool = Query(False)):
         media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+class SheetImportIn(BaseModel):
+    url: str
+
+
+@app.post("/api/import/sheet")
+def import_sheet_api(payload: SheetImportIn):
+    """Google Sheets'ten tam senkronizasyon: tabloları silip sheet'ten
+    yeniden doldurur ve kural motorunu çalıştırır."""
+    from .sheets_import import import_sheet
+
+    try:
+        stats = import_sheet(payload.url)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, **stats}
 
 
 _STATIC_DIR = Path(__file__).resolve().parent.parent / "static"

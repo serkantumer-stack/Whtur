@@ -7,7 +7,14 @@ const RULE_NAMES = {
 
 async function api(url, opts = {}) {
   const res = await fetch(url, opts);
-  if (!res.ok) throw new Error("HTTP " + res.status);
+  if (!res.ok) {
+    let detail = "HTTP " + res.status;
+    try {
+      const j = await res.json();
+      if (j.detail) detail = j.detail;
+    } catch (e) { /* hata detayı yok */ }
+    throw new Error(detail);
+  }
   return res.json();
 }
 
@@ -139,6 +146,54 @@ $("#btn-engine").addEventListener("click", async () => {
 
 $("#btn-export").addEventListener("click", () => {
   window.location.href = "/api/export/csv";
+});
+
+// --- Google Sheets içe aktarma ---
+const importModal = $("#import-modal");
+const importResult = $("#import-result");
+
+$("#btn-import").addEventListener("click", () => {
+  importResult.className = "import-result hidden";
+  importResult.textContent = "";
+  importModal.classList.remove("hidden");
+});
+$("#btn-import-cancel").addEventListener("click", () =>
+  importModal.classList.add("hidden"));
+importModal.addEventListener("click", (e) => {
+  if (e.target === importModal) importModal.classList.add("hidden");
+});
+
+$("#btn-import-run").addEventListener("click", async () => {
+  const url = $("#sheet-url").value.trim();
+  if (!url) {
+    importResult.className = "import-result err";
+    importResult.textContent = "Lütfen Google Sheets linkini yapıştırın.";
+    return;
+  }
+  const btn = $("#btn-import-run");
+  btn.disabled = true;
+  btn.textContent = "İçe aktarılıyor…";
+  try {
+    const r = await api("/api/import/sheet", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+    const unknown = r.unknown_codes && r.unknown_codes.length
+      ? ` Tanınmayan sonuç kodları (kuralı yok, görev üretmez): ${r.unknown_codes.join(", ")}`
+      : "";
+    importResult.className = "import-result ok";
+    importResult.textContent =
+      `İçe aktarma tamamlandı: ${r.guests} misafir, ${r.contacts} temas, ` +
+      `${r.reservations} rezervasyon — motor ${r.engine.converted} converted + ` +
+      `${r.engine.non_converted} lead görevi üretti.${unknown}`;
+    await Promise.all([loadStats(), loadTasks()]);
+  } catch (e) {
+    importResult.className = "import-result err";
+    importResult.textContent = "İçe aktarma başarısız: " + e.message;
+  }
+  btn.disabled = false;
+  btn.textContent = "İçe Aktar";
 });
 
 loadStats();

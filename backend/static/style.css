@@ -205,6 +205,46 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .toast.error { background: var(--danger); }
 .hidden { display: none; }
 
+/* ---------- Sheets import modal ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  padding: 20px;
+}
+.modal-card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 24px;
+  width: 560px;
+  max-width: 100%;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3);
+}
+.modal-card h2 { font-size: 16px; margin-bottom: 10px; }
+.modal-hint { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+#sheet-url {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  margin-bottom: 14px;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.import-result {
+  margin-top: 14px;
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+.import-result.ok { background: #d1fae5; color: #065f46; }
+.import-result.err { background: #fee2e2; color: #991b1b; }
+
 @media (max-width: 900px) {
   .trees { grid-template-columns: 1fr; }
   .topbar, main, .kpis, .tabs { padding-left: 14px; padding-right: 14px; }

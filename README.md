@@ -77,6 +77,16 @@ Script kaynak tabloları okur, kural tablosunu pandas ile uygular (sabit gecikme
 
 **CSV kolonları:** `misafir_id, ad, soyad, telefon, email, segment, kural, sonuc_kodu, tekrar_aranma_tarihi, hedef_donem, oncelik, oncelik_adi, deneme_no, son_temas_tarihi, son_rezervasyon_tarihi, notlar` — öncelik ve tarihe göre sıralı, Excel uyumlu (UTF-8 BOM).
 
+## Google Sheets Bağlantısı
+
+Mevcut müşteri verisi Google Sheets'te duruyorsa paneldeki **📥 Sheets İçe Aktar** düğmesiyle bağlanılır:
+
+1. Google'da sheet'i **Dosya → Web'de yayınla** (veya "Herkesi görüntüleyebilir" paylaşım linki) ile erişilebilir yapın.
+2. Panelden **Sheets İçe Aktar** → linki yapıştırın → **İçe Aktar**.
+3. İçe aktarma **tüm mevcut veriyi siler** (demo dahil), sheet'i ana veri kaynağı yapar ve kural motorunu otomatik çalıştırır.
+
+Kolon eşlemesi esnektir (Türkçe/İngilizce başlıklar otomatik tanınır): `Ad/Soyad` veya tek `Ad Soyad` kolonu, `Telefon`, `E-posta`, `İlk Temas`, `Son Temas`, `Sonuç Kodu`, `Rezervasyon Tarihi`, `Konaklama Tarihi`, `Çıkış Tarihi`, `Tutar`, `Durum`. Sonuç kodları normalize edilir ("Fiyat Yüksek", "Meşgul", "Satın Aldı" vb. → kanonik kodlar); tanınmayan kodlar içe alınır ama kural tablosunda karşılığı yoksa görev üretmez ve panelde raporlanır. API: `POST /api/import/sheet {"url": "..."}`.
+
 ## Çalıştırma
 
 ```bash

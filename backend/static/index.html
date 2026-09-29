@@ -16,6 +16,7 @@
     </div>
   </div>
   <div class="actions">
+    <button id="btn-import" class="btn">📥 Sheets İçe Aktar</button>
     <button id="btn-engine" class="btn primary">⚙️ Motoru Çalıştır</button>
     <button id="btn-export" class="btn">⬇ CSV İndir</button>
   </div>
@@ -88,6 +89,19 @@
     <div id="schema-list" class="schema-grid"></div>
   </section>
 </main>
+
+<div id="import-modal" class="modal hidden">
+  <div class="modal-card">
+    <h2>Google Sheets'ten İçe Aktar</h2>
+    <p class="modal-hint">Sheet'i Google'da <b>Dosya → Web'de yayınla</b> ile yayınlayın veya <b>"Herkesi görüntüleyebilir"</b> paylaşım linki alın, buraya yapıştırın. İçe aktarma <b>tüm mevcut veriyi (demo verisi dahil) siler</b> ve sheet'i ana veri kaynağı yapar; ardından kural motoru otomatik çalışır.</p>
+    <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…">
+    <div class="modal-actions">
+      <button id="btn-import-cancel" class="btn">Vazgeç</button>
+      <button id="btn-import-run" class="btn primary">İçe Aktar</button>
+    </div>
+    <p id="import-result" class="import-result hidden"></p>
+  </div>
+</div>
 
 <div id="toast" class="toast hidden"></div>
 <script src="/app.js"></script>
