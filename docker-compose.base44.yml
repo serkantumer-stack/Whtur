@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=crm
+      - POSTGRES_PASSWORD=crm_dev_password
+      - POSTGRES_DB=outbound_crm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crm -d outbound_crm"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  app:
+    image: python:3.12-slim
+    restart: on-failure
+    working_dir: /app/backend
+    command: ["sh", "-ec", "pip install -r requirements.txt && exec python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://crm:crm_dev_password@db:5432/outbound_crm
+    volumes:
+      - .:/app
+      - pipcache:/root/.cache/pip
+    ports:
+      - "3000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/stats', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  pgdata:
+  pipcache:

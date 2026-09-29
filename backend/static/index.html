@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whtur — Outbound CRM Motoru</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">W</div>
+    <div>
+      <h1>Whtur Outbound CRM</h1>
+      <p>Müşteri Geri Kazanım &amp; Satış Algoritması</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="btn-engine" class="btn primary">⚙️ Motoru Çalıştır</button>
+    <button id="btn-export" class="btn">⬇ CSV İndir</button>
+  </div>
+</header>
+
+<section class="kpis" id="kpis"></section>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="tasks">📞 Arama Listesi</button>
+  <button class="tab" data-tab="rules">📋 Kural Tablosu</button>
+  <button class="tab" data-tab="schema">🗄 Veri Modeli</button>
+</nav>
+
+<main>
+  <section id="panel-tasks" class="panel active">
+    <div class="filters">
+      <label>Segment
+        <select id="f-segment">
+          <option value="all">Tümü</option>
+          <option value="converted">Satın Alan</option>
+          <option value="non_converted">Potansiyel (Lead)</option>
+        </select>
+      </label>
+      <label>Zaman
+        <select id="f-due">
+          <option value="all">Tümü</option>
+          <option value="due">Vadesi Gelen</option>
+          <option value="upcoming">Yaklaşan</option>
+        </select>
+      </label>
+    </div>
+    <div class="table-wrap">
+      <table id="task-table">
+        <thead>
+          <tr>
+            <th>Misafir</th><th>Segment</th><th>Kural / Sonuç Kodu</th>
+            <th>Aranma Tarihi</th><th>Hedef Dönem</th><th>Öncelik</th>
+            <th>Deneme</th><th>Not</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p id="task-empty" class="empty hidden">Bu filtreyle görev bulunamadı.</p>
+  </section>
+
+  <section id="panel-rules" class="panel">
+    <div class="rule-block">
+      <h2>Satın Almayanlar (Lead) — Sonuç Kodu Kural Tablosu</h2>
+      <div class="table-wrap">
+        <table id="rule-table">
+          <thead>
+            <tr><th>Kod</th><th>Açıklama</th><th>Tekrar Aranma Stratejisi</th><th>Öncelik</th><th>Max Deneme</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="rule-block">
+      <h2>Satın Alanlar (Converted) — Yıl Dönümü Kuralı</h2>
+      <div id="converted-rule" class="kv-cards"></div>
+    </div>
+    <div class="trees">
+      <pre id="tree-converted"></pre>
+      <pre id="tree-lead"></pre>
+    </div>
+  </section>
+
+  <section id="panel-schema" class="panel">
+    <div id="schema-list" class="schema-grid"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden"></div>
+<script src="/app.js"></script>
+</body>
+</html>
